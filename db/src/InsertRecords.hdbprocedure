@@ -1,0 +1,277 @@
+PROCEDURE InsertDataAndLogErrors (
+  -- IN datatoinsert TABLE (Industry NVARCHAR(100) NOT NULL,Year NVARCHAR(25) NOT NULL,MONTH NVARCHAR(14) NOT NULL,Location NVARCHAR(120) NOT NULL,TYPE NVARCHAR(50) NOT NULL,SubType NVARCHAR(50) NOT NULL,KPI NVARCHAR(5000) NOT NULL,Sno INTEGER NOT NULL,url NVARCHAR(5000),Value DECIMAL(34),Unit NVARCHAR(20),IUnit NVARCHAR(8),IValue DECIMAL(34),Cost DECIMAL(34),Currency NVARCHAR(10),Quality NVARCHAR(40),COMMENT NVARCHAR(5000),FiscalType BOOLEAN,YearA NVARCHAR(9),StartDate NVARCHAR(25),EndDate NVARCHAR(25),fiscal NVARCHAR(25),isValidationRequired BOOLEAN,Owner NVARCHAR(5000),Approver NVARCHAR(5000),Division NVARCHAR(5000),Value2 DECIMAL(34),Unit2 NVARCHAR(4),Distance DECIMAL(34),Weight DECIMAL(34),Scope NVARCHAR(5000),Associates INTEGER,Date DATE,Logic NVARCHAR(15),Measure NVARCHAR(70),Standard1 NVARCHAR(5000),LogicE NVARCHAR(20),GRIStd NVARCHAR(5000),SDG NVARCHAR(500),Class NVARCHAR(50),RenNon NVARCHAR(5000),FValue DECIMAL(34),FValue1 DECIMAL(34)),
+  -- IN datatoinsert   Environment_Table_Types,
+  IN DATATOINSERT NVARCHAR(5000),
+  OUT errorlog TABLE ( ERROR_CODE NVARCHAR(5000), ERROR_MSG NVARCHAR(5000))
+)
+LANGUAGE SQLSCRIPT
+SQL SECURITY INVOKER
+AS
+BEGIN
+  DECLARE errorCount INTEGER = 0;
+  
+   --  Commented Dec 19
+  -- DECLARE CURSOR c_data for select * from :datatoinsert;
+    
+  --  end ofCommented Dec 19
+  DECLARE ID_ROW INTEGER;
+  DECLARE N_STOP INTEGER ;
+  DECLARE ID VARCHAR(36);
+ DECLARE INDUSTRY NVARCHAR(5000);
+ DECLARE Year NVARCHAR(25);
+ DECLARE MONTH NVARCHAR(14);
+ DECLARE Location NVARCHAR(120);
+ DECLARE TYPE NVARCHAR(50);
+ DECLARE SubType NVARCHAR(50);
+ DECLARE KPI NVARCHAR(5000);
+ DECLARE Sno INTEGER;
+ DECLARE url NVARCHAR(5000);
+ DECLARE Value DECIMAL;
+ DECLARE Unit NVARCHAR(20);
+ DECLARE IUnit NVARCHAR(8);
+ DECLARE IValue DECIMAL(34);
+ DECLARE Cost DECIMAL;
+ DECLARE Currency NVARCHAR(10);
+ DECLARE Quality NVARCHAR(40);
+ DECLARE COMMENT NVARCHAR(5000);
+ DECLARE FiscalType NVARCHAR(1);
+ DECLARE YearA NVARCHAR(9);
+ DECLARE StartDate NVARCHAR(25);
+DECLARE EndDate NVARCHAR(25);
+DECLARE fiscal NVARCHAR(25);
+DECLARE isValidationRequired NVARCHAR(1);
+DECLARE Owner NVARCHAR(5000);
+DECLARE Approver NVARCHAR(5000);
+DECLARE  Division NVARCHAR(5000);
+DECLARE  Value2 DECIMAL;
+DECLARE  Unit2 NVARCHAR(4);
+DECLARE  Distance DECIMAL;
+DECLARE  Weight DECIMAL;
+DECLARE  Scope NVARCHAR(5000);
+DECLARE  Associates INTEGER;
+DECLARE  Date DATE;
+DECLARE  Logic NVARCHAR(15);
+DECLARE  Measure NVARCHAR(70);
+DECLARE  Standard1 NVARCHAR(5000);
+DECLARE  LogicE NVARCHAR(20);
+DECLARE  GRIStd NVARCHAR(5000);
+DECLARE  SDG NVARCHAR(500);
+DECLARE  Class NVARCHAR(50);
+DECLARE  RenNon NVARCHAR(5000);
+DECLARE  FValue DECIMAL;
+DECLARE  FValue1 DECIMAL;
+  DECLARE ADDRESS VARCHAR(40);
+  DECLARE EX_MESSAGE VARCHAR(1000);
+  DECLARE jsonData NVARCHAR(5000);
+  DECLARE jsonTable APP_INTERACTIONS_STUDENTS;
+  DECLARE parsedData TABLE(
+    Industry NVARCHAR(5000),
+          Year NVARCHAR(25),
+          MONTH NVARCHAR(14),
+          Location NVARCHAR(120),
+          TYPE NVARCHAR(50),
+          SubType NVARCHAR(50),
+          KPI NVARCHAR(5000),
+          Sno INTEGER,
+          url NVARCHAR(5000),
+          Value DECIMAL,
+          Unit NVARCHAR(20),
+          IUnit NVARCHAR(8),
+          IValue DECIMAL(34),
+          Cost DECIMAL,
+          Currency NVARCHAR(10),
+          Quality NVARCHAR(40),
+          COMMENT NVARCHAR(5000),
+          FiscalType NVARCHAR(1),
+          YearA NVARCHAR(9),
+          StartDate NVARCHAR(25),
+          EndDate NVARCHAR(25),
+          fiscal NVARCHAR(25),
+          isValidationRequired NVARCHAR(1),
+          Owner NVARCHAR(5000),
+          Approver NVARCHAR(5000),
+          Division NVARCHAR(5000),
+          Value2 DECIMAL,
+          Unit2 NVARCHAR(4),
+          Distance DECIMAL,
+          Weight DECIMAL,
+          Scope NVARCHAR(5000),
+          Associates INTEGER,
+          Date DATE,
+          Logic NVARCHAR(15),
+          Measure NVARCHAR(70),
+          Standard1 NVARCHAR(5000),
+          LogicE NVARCHAR(20),
+          GRIStd NVARCHAR(5000),
+          SDG NVARCHAR(500),
+          Class NVARCHAR(50),
+          RenNon NVARCHAR(5000),
+          FValue DECIMAL,
+          FValue1 DECIMAL
+        -- Add other columns as needed
+    );
+    DECLARE cleanArray NVARCHAR(5000);
+    DECLARE CURSOR c_data for select * from :parsedData;
+
+  DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
+  BEGIN
+
+    EX_MESSAGE := 'SQL Exception occured. Error Code is: ' || ::SQL_ERROR_CODE || ' Error message is: ' || ::SQL_ERROR_MESSAGE;
+
+
+    INSERT INTO APP_INTERACTIONS_ERROR_LOG (ERROR_CODE, ERROR_MSG ) VALUES (INDUSTRY,EX_MESSAGE);
+
+
+  
+  END;
+
+
+
+
+
+  CREATE LOCAL TEMPORARY TABLE #ltt_ErrorLogTable ( ErrorDescription NVARCHAR(5000), FailedDataRow NVARCHAR(5000));
+  
+
+  
+
+  -- FOR c_data_row AS c_data DO
+
+  --  Commented Dec 19
+  --   STD_ID = :c_data_row.STUDENTID;
+  --   FIRSTNAME = :c_data_row.FIRSTNAME;   
+  --   LASTNAME =  :c_data_row.LASTNAME; 
+  --   DOB =  :c_data_row.DOB;
+  --   ADDRESS =  :c_data_row.ADDRESS;
+    
+
+    
+  --   INSERT INTO APP_INTERACTIONS_STUDENTS (StudentId, FIRSTNAME, LASTNAME , DOB ,ADDRESS)
+  --         VALUES (STD_ID, FIRSTNAME, LASTNAME , DOB , ADDRESS);
+  -- END FOR;
+  -- end of Commented Dec 19
+
+  jsonData = :DATATOINSERT; 
+  -- Parse JSON data and insert into the table variable
+  parsedData = SELECT * FROM JSON_TABLE(:DATATOINSERT, '$[*]'
+        COLUMNS (
+          Industry NVARCHAR(5000) PATH '$.Industry',
+          Year NVARCHAR(25) PATH '$.Year',
+          MONTH NVARCHAR(14) PATH '$.Month',
+          Location NVARCHAR(120) PATH '$.Location',
+          TYPE NVARCHAR(50) PATH '$.Type',
+          SubType NVARCHAR(50) PATH '$.SubType',
+          KPI NVARCHAR(5000) PATH '$.KPI',
+          Sno INTEGER PATH '$.Sno',
+          url NVARCHAR(5000) PATH '$.url',
+          Value DECIMAL PATH '$.Value',
+          Unit NVARCHAR(20) PATH '$.Unit',
+          IUnit NVARCHAR(8) PATH '$.IUnit',
+          IValue DECIMAL PATH '$.IValue',
+          Cost DECIMAL PATH '$.Cost',
+          Currency NVARCHAR(10) PATH '$.Currency',
+          Quality NVARCHAR(40) PATH '$.Quality',
+          COMMENT NVARCHAR(5000) PATH '$.COMMENT',
+          FiscalType NVARCHAR(1) PATH '$.FiscalType',
+          YearA NVARCHAR(9) PATH '$.YearA',
+          StartDate NVARCHAR(25) PATH '$.StartDate',
+          EndDate NVARCHAR(25) PATH '$.EndDate',
+          fiscal NVARCHAR(25) PATH '$.fiscal',
+          isValidationRequired NVARCHAR(1) PATH '$.isValidationRequired',
+          Owner NVARCHAR(5000) PATH '$.Owner',
+          Approver NVARCHAR(5000) PATH '$.Approver',
+          Division NVARCHAR(5000) PATH '$.Division',
+          Value2 DECIMAL PATH '$.Value2',
+          Unit2 NVARCHAR(4) PATH '$.Unit2',
+          Distance DECIMAL PATH '$.Distance',
+          Weight DECIMAL PATH '$.Weight',
+          Scope NVARCHAR(5000) PATH '$.Scope',
+          Associates INTEGER PATH '$.Associates',
+          Date DATE PATH '$.Date',
+          Logic NVARCHAR(15) PATH '$.Logic',
+          Measure NVARCHAR(70) PATH '$.Measure',
+          Standard1 NVARCHAR(5000) PATH '$.Standard1',
+          LogicE NVARCHAR(20) PATH '$.LogicE',
+          GRIStd NVARCHAR(5000) PATH '$.GRIStd',
+          SDG NVARCHAR(500) PATH '$.SDG',
+          Class NVARCHAR(50) PATH '$.Class',
+          RenNon NVARCHAR(5000) PATH '$.RenNon',
+          FValue DECIMAL PATH '$.FValue',
+          FValue1 DECIMAL PATH '$.FValue1'
+          
+        )
+    );
+FOR c_data_row AS c_data DO
+--   STD_ID = :c_data_row.StudentId;
+--      FIRSTNAME = :c_data_row.FIRSTNAME;   
+--      LASTNAME =  :c_data_row.LASTNAME; 
+--      DOB =  :c_data_row.DOB;
+--      ADDRESS =  :c_data_row.ADDRESS;
+
+INDUSTRY = :c_data_row.Industry;
+-- INDUSTRY = :c_data_row.INDUSTRY;
+Year = :c_data_row.YEAR;
+MONTH = :c_data_row.MONTH;
+Location = :c_data_row.Location;
+TYPE = :c_data_row.TYPE;
+SubType = :c_data_row.SubType;
+KPI = :c_data_row.KPI;
+Sno = :c_data_row.Sno;
+url = :c_data_row.url;
+Value = :c_data_row.Value;
+Unit = :c_data_row.Unit;
+IUnit = :c_data_row.IUnit;
+IValue = :c_data_row.IValue;
+Cost = :c_data_row.Cost;
+Currency = :c_data_row.Currency;
+Quality = :c_data_row.Quality;
+COMMENT = :c_data_row.COMMENT;
+FiscalType = :c_data_row.FiscalType;
+YearA = :c_data_row.YearA;
+StartDate = :c_data_row.StartDate;
+EndDate = :c_data_row.EndDate;
+fiscal = :c_data_row.fiscal;
+isValidationRequired = :c_data_row.isValidationRequired;
+Owner = :c_data_row.Owner;
+Approver = :c_data_row.Approver;
+Division = :c_data_row.Division;
+Value2 = :c_data_row.Value2;
+Unit2 = :c_data_row.Unit2;
+Distance = :c_data_row.Distance;
+Weight = :c_data_row.Weight;
+Scope = :c_data_row.Scope;
+Associates = :c_data_row.Associates;
+Date = :c_data_row.Date;
+Logic = :c_data_row.Logic;
+Measure = :c_data_row.Measure;
+Standard1 = :c_data_row.Standard1;
+LogicE = :c_data_row.LogicE;
+GRIStd = :c_data_row.GRIStd;
+SDG = :c_data_row.SDG;
+Class = :c_data_row.Class;
+RenNon = :c_data_row.RenNon;
+FValue = :c_data_row.FValue;
+FValue1 = :c_data_row.FValue1;
+    
+
+    
+--      INSERT INTO APP_INTERACTIONS_STUDENTS (StudentId, FIRSTNAME, LASTNAME , DOB ,ADDRESS)
+--            VALUES (STD_ID, FIRSTNAME, LASTNAME , DOB , ADDRESS);
+
+INSERT INTO APP_INTERACTIONS_ENVIRONMENT_REPORT (Industry, Year, Month, Location, Type, SubType, KPI, Sno, url, Value, Unit, IUnit, IValue, Cost, Currency, Quality, Comment, FiscalType, YearA, StartDate, EndDate, fiscal, isValidationRequired, Owner, Approver, Division, Value2, Unit2, Distance, Weight, Scope, Associates, Date, Logic, Measure, Standard1, LogicE, GRIStd, SDG, Class, RenNon, FValue, FValue1)
+           VALUES (Industry, Year, Month, Location, Type, SubType, KPI, Sno, url, Value, Unit, IUnit, IValue, Cost, Currency, Quality, Comment, FiscalType, YearA, StartDate, EndDate, fiscal, isValidationRequired, Owner, Approver, Division, Value2, Unit2, Distance, Weight, Scope, Associates, Date, Logic, Measure, Standard1, LogicE, GRIStd, SDG, Class, RenNon, FValue, FValue1);
+
+
+  END FOR;
+
+  
+ 
+  
+  
+
+  
+
+  errorlog = SELECT ERROR_CODE,ERROR_MSG FROM APP_INTERACTIONS_ERROR_LOG;
+
+   
+
+END;

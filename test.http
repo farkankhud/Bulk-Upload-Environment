@@ -1,0 +1,28 @@
+
+POST http://localhost:4004/catalog/Social_KPIList
+Authorization: Basic adminuser:67890
+Accept: application/json
+Content-Type: application/json
+
+{ 
+
+
+"KPI_ID": 0,
+"KPI": "SUBTYPE",
+"KPI_Template": "TABLE1",
+"Measure": null,
+"InformationType": null,
+"Question": null,
+"Prefix": null,
+"Logic": null,
+"Standard": null,
+"SDG_Industry": null
+}
+
+###
+PUT  http://localhost:4004/catalog/ExcelUpload
+Authorization: Basic sharique.ali2001@yahoo.com:Far!1234
+Content-Type: application/doc
+slug: Test1.xlsx,1000000035
+
+< ./ExportExcel.xlsx
