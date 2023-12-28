@@ -1,4 +1,4 @@
-PROCEDURE InsertDataAndLogErrors (
+PROCEDURE InsertEnvironment (
   -- IN datatoinsert TABLE (Industry NVARCHAR(100), Year NVARCHAR(25), MONTH NVARCHAR(14), Location NVARCHAR(120), TYPE NVARCHAR(50), SubType NVARCHAR(50), KPI NVARCHAR(5000), Sno INTEGER, url NVARCHAR(5000),Value DECIMAL(34),Unit NVARCHAR(20),IUnit NVARCHAR(8),IValue DECIMAL(34),Cost DECIMAL(34),Currency NVARCHAR(10),Quality NVARCHAR(40),COMMENT NVARCHAR(5000),FiscalType BOOLEAN,YearA NVARCHAR(9),StartDate NVARCHAR(25),EndDate NVARCHAR(25),fiscal NVARCHAR(25),isValidationRequired BOOLEAN,Owner NVARCHAR(5000),Approver NVARCHAR(5000),Division NVARCHAR(5000),Value2 DECIMAL(34),Unit2 NVARCHAR(4),Distance DECIMAL(34),Weight DECIMAL(34),Scope NVARCHAR(5000),Associates INTEGER,Date DATE,Logic NVARCHAR(15),Measure NVARCHAR(70),Standard1 NVARCHAR(5000),LogicE NVARCHAR(20),GRIStd NVARCHAR(5000),SDG NVARCHAR(500),Class NVARCHAR(50),RenNon NVARCHAR(5000),FValue DECIMAL(34),FValue1 DECIMAL(34)),
 -- IN datatoinsert TABLE (Industry NVARCHAR(100), Year NVARCHAR(25), MONTH NVARCHAR(14), Location NVARCHAR(120), TYPE NVARCHAR(50), SubType NVARCHAR(50), KPI NVARCHAR(5000), Sno INTEGER, url NVARCHAR(5000), Value DECIMAL(34), Unit NVARCHAR(20), IUnit NVARCHAR(8), IValue DECIMAL(34), Cost DECIMAL(34), Currency NVARCHAR(10), Quality NVARCHAR(40), COMMENT NVARCHAR(5000), FiscalType NVARCHAR(1), YearA NVARCHAR(9), StartDate NVARCHAR(25), EndDate NVARCHAR(25), fiscal NVARCHAR(25), isValidationRequired NVARCHAR(1), Owner NVARCHAR(5000), Approver NVARCHAR(5000), Division NVARCHAR(5000), Value2 DECIMAL(34), Unit2 NVARCHAR(4), Distance DECIMAL(34), Weight DECIMAL(34), Scope NVARCHAR(5000), Associates INTEGER,Date DATE, Logic NVARCHAR(15), Measure NVARCHAR(70), Standard1 NVARCHAR(5000), LogicE NVARCHAR(20), GRIStd NVARCHAR(5000),SDG NVARCHAR(500),Class NVARCHAR(50), RenNon NVARCHAR(5000), FValue DECIMAL(34), FValue1 DECIMAL(34)),
   -- IN datatoinsert   TTENVIRONMENT,
@@ -6,9 +6,10 @@ PROCEDURE InsertDataAndLogErrors (
   IN datatoinsert    TTCORPORATE,
   -- IN DATATOINSERT NVARCHAR(5000),
   -- IN DATATOINSERT VARBINARY,
-  -- OUT errorlog TABLE ( ERROR_CODE NVARCHAR(5000), ERROR_MSG NVARCHAR(5000))
-  OUT errorlog TTERROR
-)
+  --OUT errorlog TABLE ( ERROR_CODE NVARCHAR(5000), ERROR_MSG NVARCHAR(5000))
+  --  OUT errorlog1 TABLE ( Location NVARCHAR(120), Division NVARCHAR(5000), Year NVARCHAR(25), Month NVARCHAR(14), Type NVARCHAR(50), SubType NVARCHAR(50), KPI NVARCHAR(5000), Unit NVARCHAR(20), Value DECIMAL(34), Cost DECIMAL(34), Currency NVARCHAR(10), Quality NVARCHAR(40), Comment NVARCHAR(5000))
+  OUT errorlog1 TTERROR
+  )
 LANGUAGE SQLSCRIPT
 SQL SECURITY INVOKER
 AS
@@ -29,9 +30,6 @@ BEGIN
  DECLARE TYPE NVARCHAR(50);
  DECLARE SubType NVARCHAR(50);
  DECLARE KPI NVARCHAR(5000);
- DECLARE LV_TYPE NVARCHAR(50);
- DECLARE LV_SubType NVARCHAR(50);
- DECLARE LV_KPI NVARCHAR(5000);
  DECLARE Sno INTEGER DEFAULT 0;
  DECLARE url NVARCHAR(5000);
  DECLARE Value DECIMAL;
@@ -76,54 +74,7 @@ DECLARE  FValue1 DECIMAL;
   
   DECLARE TEMPKPI TTKPI;
   DECLARE TEMpYEAR TTYEAR;
-  DECLARE parsedData TABLE(
-    Industry NVARCHAR(5000),
-          Year NVARCHAR(25),
-          MONTH NVARCHAR(14),
-          Location NVARCHAR(120),
-          TYPE NVARCHAR(50),
-          SubType NVARCHAR(50),
-          KPI NVARCHAR(5000),
-          Sno INTEGER,
-          url NVARCHAR(5000),
-          Value DECIMAL,
-          Unit NVARCHAR(20),
-          IUnit NVARCHAR(8),
-          IValue DECIMAL(34),
-          Cost DECIMAL,
-          Currency NVARCHAR(10),
-          Quality NVARCHAR(40),
-          COMMENT NVARCHAR(5000),
-          FiscalType NVARCHAR(1),
-          YearA NVARCHAR(9),
-          StartDate NVARCHAR(25),
-          EndDate NVARCHAR(25),
-          fiscal NVARCHAR(25),
-          isValidationRequired NVARCHAR(1),
-          Owner NVARCHAR(5000),
-          Approver NVARCHAR(5000),
-          Division NVARCHAR(5000),
-          Value2 DECIMAL,
-          Unit2 NVARCHAR(4),
-          Distance DECIMAL,
-          Weight DECIMAL,
-          Scope NVARCHAR(5000),
-          Associates INTEGER,
-          Date DATE,
-          Logic NVARCHAR(15),
-          Measure NVARCHAR(70),
-          Standard1 NVARCHAR(5000),
-          LogicE NVARCHAR(20),
-          GRIStd NVARCHAR(5000),
-          SDG NVARCHAR(500),
-          Class NVARCHAR(50),
-          RenNon NVARCHAR(5000),
-          FValue DECIMAL,
-          FValue1 DECIMAL
-        -- Add other columns as needed
-    );
-    -- DECLARE cleanArray NVARCHAR(5000);
-    -- DECLARE CURSOR c_data for select * from :parsedData;
+  
 
   DECLARE CONTINUE HANDLER FOR SQLEXCEPTION
   BEGIN
@@ -131,9 +82,7 @@ DECLARE  FValue1 DECIMAL;
     EX_MESSAGE := 'SQL Exception occured. Error Code is: ' || ::SQL_ERROR_CODE || ' Error message is: ' || ::SQL_ERROR_MESSAGE;
 
 
-    -- INSERT INTO APP_INTERACTIONS_ERROR_LOG (ERROR_CODE, ERROR_MSG ) VALUES (INDUSTRY,EX_MESSAGE);
-    INSERT INTO APP_INTERACTIONS_ERROR_LOG1 ( Location, Division, Year, Month, Type, SubType, KPI, Unit, Value, Currency, Quality, Comment, ERROR_MSG)
-           VALUES (Location, Division, Year, Month, Type, SubType, KPI, Unit, Value, Currency, Quality, Comment, EX_MESSAGE);
+    INSERT INTO APP_INTERACTIONS_ERROR_LOG (ERROR_CODE, ERROR_MSG ) VALUES (INDUSTRY,EX_MESSAGE);
 
 
   
@@ -148,76 +97,7 @@ DECLARE  FValue1 DECIMAL;
 
   
 
-  -- FOR c_data_row AS c_data DO
-
-  --  Commented Dec 19
-  --   STD_ID = :c_data_row.STUDENTID;
-  --   FIRSTNAME = :c_data_row.FIRSTNAME;   
-  --   LASTNAME =  :c_data_row.LASTNAME; 
-  --   DOB =  :c_data_row.DOB;
-  --   ADDRESS =  :c_data_row.ADDRESS;
-    
-
-    
-  --   INSERT INTO APP_INTERACTIONS_STUDENTS (StudentId, FIRSTNAME, LASTNAME , DOB ,ADDRESS)
-  --         VALUES (STD_ID, FIRSTNAME, LASTNAME , DOB , ADDRESS);
-  -- END FOR;
-  -- end of Commented Dec 19
   
-  -- decompressed_data := TO_VARCHAR(COMPRESS_UNCOMPRESS(DATATOINSERT, 'zlib'));
-  -- decompressed_data := TO_VARCHAR(LZ_DECOMPRESS(:DATATOINSERT));
-
-
-  -- Parse JSON data and insert into the table variable
-  -- parsedData = SELECT * FROM JSON_TABLE(:DATATOINSERT, '$[*]'
-  --       COLUMNS (
-  --         Industry NVARCHAR(5000) PATH '$.Industry',
-  --         Year NVARCHAR(25) PATH '$.Year',
-  --         MONTH NVARCHAR(14) PATH '$.Month',
-  --         Location NVARCHAR(120) PATH '$.Location',
-  --         TYPE NVARCHAR(50) PATH '$.Type',
-  --         SubType NVARCHAR(50) PATH '$.SubType',
-  --         KPI NVARCHAR(5000) PATH '$.KPI',
-  --         Sno INTEGER PATH '$.Sno',
-  --         url NVARCHAR(5000) PATH '$.url',
-  --         Value DECIMAL PATH '$.Value',
-  --         Unit NVARCHAR(20) PATH '$.Unit',
-  --         IUnit NVARCHAR(8) PATH '$.IUnit',
-  --         IValue DECIMAL PATH '$.IValue',
-  --         Cost DECIMAL PATH '$.Cost',
-  --         Currency NVARCHAR(10) PATH '$.Currency',
-  --         Quality NVARCHAR(40) PATH '$.Quality',
-  --         COMMENT NVARCHAR(5000) PATH '$.COMMENT',
-  --         FiscalType NVARCHAR(1) PATH '$.FiscalType',
-  --         YearA NVARCHAR(9) PATH '$.YearA',
-  --         StartDate NVARCHAR(25) PATH '$.StartDate',
-  --         EndDate NVARCHAR(25) PATH '$.EndDate',
-  --         fiscal NVARCHAR(25) PATH '$.fiscal',
-  --         isValidationRequired NVARCHAR(1) PATH '$.isValidationRequired',
-  --         Owner NVARCHAR(5000) PATH '$.Owner',
-  --         Approver NVARCHAR(5000) PATH '$.Approver',
-  --         Division NVARCHAR(5000) PATH '$.Division',
-  --         Value2 DECIMAL PATH '$.Value2',
-  --         Unit2 NVARCHAR(4) PATH '$.Unit2',
-  --         Distance DECIMAL PATH '$.Distance',
-  --         Weight DECIMAL PATH '$.Weight',
-  --         Scope NVARCHAR(5000) PATH '$.Scope',
-  --         Associates INTEGER PATH '$.Associates',
-  --         Date DATE PATH '$.Date',
-  --         Logic NVARCHAR(15) PATH '$.Logic',
-  --         Measure NVARCHAR(70) PATH '$.Measure',
-  --         Standard1 NVARCHAR(5000) PATH '$.Standard1',
-  --         LogicE NVARCHAR(20) PATH '$.LogicE',
-  --         GRIStd NVARCHAR(5000) PATH '$.GRIStd',
-  --         SDG NVARCHAR(500) PATH '$.SDG',
-  --         Class NVARCHAR(50) PATH '$.Class',
-  --         RenNon NVARCHAR(5000) PATH '$.RenNon',
-  --         FValue DECIMAL PATH '$.FValue',
-  --         FValue1 DECIMAL PATH '$.FValue1'
-          
-  --       )
-  --   );
-
   -- DECLARE CURSOR cur_environment_report FOR
     -- CALL GETMASTERDATA(OUTPUT_TABLE => ?);
     Industry = :DATATOINSERT.Industry[1];
@@ -225,7 +105,20 @@ DECLARE  FValue1 DECIMAL;
     
 FOR c_data_row AS c_data DO
 
-
+-- Fetch the master data fileds from KPILIST
+select TOP 1 scope,
+             measure,
+             logic,
+             logicE,
+             standard1,
+             gristd,
+             sdg,
+             rennon
+             into Scope, Measure, Logic, LogicE, Standard1, GRIStd, SDG, RenNon
+              FROM :TEMPKPI
+             where TYPE = :c_data_row.Type and
+             SubType = :c_data_row.SubType and
+             KPI = :c_data_row.KPI;
 
 INDUSTRY = :c_data_row.Industry;
 
@@ -235,8 +128,7 @@ Location = :c_data_row.Location;
 TYPE = :c_data_row.Type;
 SubType = :c_data_row.SubType;
 KPI = :c_data_row.KPI;
--- Sno = Sno + 1;
-Sno = 0;
+Sno = Sno + 1;
 -- Sno = :c_data_row.Sno;
 -- url = :c_data_row.url;
 Value = :c_data_row.Value;
@@ -248,28 +140,6 @@ Cost = :c_data_row.Cost;
 Currency = :c_data_row.Currency;
 Quality = :c_data_row.Quality;
 COMMENT = :c_data_row.COMMENT;
-
--- Fetch the master data fileds from KPILIST
-LV_TYPE := NULL;
-LV_SUBTYPE := NULL;
-LV_KPI := NULL;
-select TOP 1 type,
-             subtype,
-             kpi,
-             scope,
-             measure,
-             logic,
-             logicE,
-             standard1,
-             gristd,
-             sdg,
-             rennon
-             into LV_TYPE, LV_SUBTYPE, LV_KPI, Scope, Measure, Logic, LogicE, Standard1, GRIStd, SDG, RenNon
-              FROM :TEMPKPI
-             where TYPE = :c_data_row.Type and
-             SubType = :c_data_row.SubType and
-             KPI = :c_data_row.KPI;
-
 -- FiscalType = :c_data_row.FiscalType;
 -- YearA = :c_data_row.YearA;
 -- StartDate = :c_data_row.StartDate;
@@ -304,10 +174,10 @@ Division = :c_data_row.Division;
 
 -- INSERT INTO APP_INTERACTIONS_ENVIRONMENT_REPORT (Industry, Year, Month, Location, Type, SubType, KPI, Sno, url, Value, Unit, IUnit, IValue, Cost, Currency, Quality, Comment, FiscalType, YearA, StartDate, EndDate, fiscal, isValidationRequired, Owner, Approver, Division, Value2, Unit2, Distance, Weight, Scope, Associates, Date, Logic, Measure, Standard1, LogicE, GRIStd, SDG, Class, RenNon, FValue, FValue1)
 --            VALUES (Industry, Year, Month, Location, Type, SubType, KPI, Sno, url, Value, Unit, IUnit, IValue, Cost, Currency, Quality, Comment, FiscalType, YearA, StartDate, EndDate, fiscal, isValidationRequired, Owner, Approver, Division, Value2, Unit2, Distance, Weight, Scope, Associates, Date, Logic, Measure, Standard1, LogicE, GRIStd, SDG, Class, RenNon, FValue, FValue1);
-IF LV_TYPE IS NOT NULL AND LV_SUBTYPE IS NOT NULL AND LV_KPI IS NOT NULL THEN
+
 INSERT INTO APP_INTERACTIONS_ENVIRONMENT_REPORT (Industry, Year, Month, Location, Type, SubType, KPI, Sno, url, Value, Unit, IUnit, IValue, Cost, Currency, Quality, Comment, FiscalType, YearA, StartDate, EndDate, fiscal, isValidationRequired, Owner, Approver, Division, Value2, Unit2, Distance, Weight, Scope, Associates, Date, Logic, Measure, Standard1, LogicE, GRIStd, SDG, Class, RenNon, FValue, FValue1)
            VALUES (Industry, Year, Month, Location, Type, SubType, KPI, Sno, '', Value, Unit, '', 0, Cost, Currency, Quality, Comment, '', '', '', '', '', '', '', '', Division, 0, '', 0, 0, Scope, 0, '', Logic, Measure, Standard1, LogicE, GRIStd, SDG, '', RenNon, 0, 0);
-END IF;
+
 -- INSERT INTO APP_INTERACTIONS_ENVIRONMENT_REPORT (Industry, Year, Month, Location, Type, SubType, KPI, Sno)
 -- VALUES (Industry, Year, Month, Location, Type, SubType, KPI, Sno);
   END FOR;
@@ -315,11 +185,11 @@ END IF;
   
  
   
-    -- INSERT INTO APP_INTERACTIONS_ERROR_LOG (ERROR_CODE, ERROR_MSG ) VALUES (INDUSTRY,'TEST');
+    INSERT INTO APP_INTERACTIONS_ERROR_LOG (ERROR_CODE, ERROR_MSG ) VALUES (INDUSTRY,'TEST');
 
   
 
-  errorlog = SELECT * FROM APP_INTERACTIONS_ERROR_LOG1;
+  errorlog1 = SELECT * FROM APP_INTERACTIONS_ERROR_LOG1;
 
    
 

@@ -1,7 +1,6 @@
 
 
-TYPE "
-Environment_Table_Types" AS TABLE (
+TYPE "TTENVIRONMENT" AS TABLE (
   Industry NVARCHAR(100) NOT NULL,
   Year NVARCHAR(25) NOT NULL,
   MONTH NVARCHAR(14) NOT NULL,
@@ -19,12 +18,12 @@ Environment_Table_Types" AS TABLE (
   Currency NVARCHAR(10),
   Quality NVARCHAR(40),
   COMMENT NVARCHAR(5000),
-  FiscalType BOOLEAN,
+  FiscalType NVARCHAR(1),
   YearA NVARCHAR(9),
   StartDate NVARCHAR(25),
   EndDate NVARCHAR(25),
   fiscal NVARCHAR(25),
-  isValidationRequired BOOLEAN,
+  isValidationRequired NVARCHAR(5000),
   Owner NVARCHAR(5000),
   Approver NVARCHAR(5000),
   Division NVARCHAR(5000),
@@ -34,7 +33,7 @@ Environment_Table_Types" AS TABLE (
   Weight DECIMAL(34),
   Scope NVARCHAR(5000),
   Associates INTEGER,
-  Date DATE,
+  Date NVARCHAR(25),
   Logic NVARCHAR(15),
   Measure NVARCHAR(70),
   Standard1 NVARCHAR(5000),

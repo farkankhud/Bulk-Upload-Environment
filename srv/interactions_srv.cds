@@ -19,6 +19,7 @@ entity KPIList as projection on interactions.KPIList;
 entity UoMConversions as projection on interactions.UoMConversions;
 entity Year_Module as projection on interactions.Year_Module;
 entity EnergyCnversions as projection on interactions.EnergyCnversions;
+entity ERROR_LOG1 as projection on interactions.ERROR_LOG1;
 
 }
 

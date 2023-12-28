@@ -1,7 +1,9 @@
 const cds = require('@sap/cds')
 const { Client } = require('@sap/hana-client');
+const { is } = require('express/lib/request');
 const { PassThrough } = require('stream');
 const XLSX = require('xlsx');
+const zlib = require('zlib');
 cds.env.features.fetch_csrf = true
 
 module.exports = srv => {
@@ -18,24 +20,26 @@ module.exports = srv => {
         });
         stream.on('end', async () => {
           var buffer = Buffer.concat(buffers);
-          // var workbook = XLSX.read(buffer, { type: "buffer", cellText: true, cellDates: true, dateNF: 'dd"."mm"."yyyy', cellNF: true, rawNumbers: false });
-          var workbook = XLSX.read(buffer, { type: "buffer" });
+          var workbook = XLSX.read(buffer, { type: "buffer", cellText: true, cellDates: true, dateNF: 'dd"."mm"."yyyy', cellNF: true, rawNumbers: false });
+          // var workbook = XLSX.read(buffer, { type: "buffer" });
           let data = []
           const sheets = workbook.SheetNames
           for (let i = 0; i < sheets.length; i++) {
+            // i = i - 1;
             const temp = XLSX.utils.sheet_to_json(
+              workbook.Sheets[workbook.SheetNames[i]], { cellText: true, cellDates: true, dateNF: 'dd"."mm"."yyyy', rawNumbers: false, header: 0, defval: "", blankrows: false })
               // workbook.Sheets[workbook.SheetNames[i]], { cellText: true, cellDates: true, dateNF: 'dd"."mm"."yyyy', rawNumbers: false })
-              workbook.Sheets[workbook.SheetNames[i]], {
-                header: 0,
-                defval: ""
-              })
             temp.forEach((res, index) => {
               if (index === 0) return;
+              // const res1 = validate(res);
+             
+
+              
               data.push(JSON.parse(JSON.stringify(res)))
             })
           }
           if (data) {
-            console.log("data =", data);
+            // console.log("data =", data);
             const responseCall = await CallEntity(entity, data);
             if (responseCall == -1)
               reject(req.error(400, JSON.stringify(data)));
@@ -73,145 +77,103 @@ module.exports = srv => {
     // const result = await InsertRecords(data);
     const ltt = `#ltt_${cds.utils.uuid().replace(/-/g, '')}`
 
-    // await cds.run(`CREATE LOCAL TEMPORARY TABLE ${ltt} (Industry NVARCHAR(100) NOT NULL,Year NVARCHAR(25) NOT NULL,MONTH NVARCHAR(14) NOT NULL,Location NVARCHAR(120) NOT NULL,TYPE NVARCHAR(50) NOT NULL,SubType NVARCHAR(50) NOT NULL,KPI NVARCHAR(5000) NOT NULL,Sno INTEGER NOT NULL,url NVARCHAR(5000),Value DECIMAL(34),Unit NVARCHAR(20),IUnit NVARCHAR(8),IValue DECIMAL(34),Cost DECIMAL(34),Currency NVARCHAR(10),Quality NVARCHAR(40),COMMENT NVARCHAR(5000),FiscalType BOOLEAN,YearA NVARCHAR(9),StartDate NVARCHAR(25),EndDate NVARCHAR(25),fiscal NVARCHAR(25),isValidationRequired BOOLEAN,Owner NVARCHAR(5000),Approver NVARCHAR(5000),Division NVARCHAR(5000),Value2 DECIMAL(34),Unit2 NVARCHAR(4),Distance DECIMAL(34),Weight DECIMAL(34),Scope NVARCHAR(5000),Associates INTEGER,Date DATE,Logic NVARCHAR(15),Measure NVARCHAR(70),Standard1 NVARCHAR(5000),LogicE NVARCHAR(20),GRIStd NVARCHAR(5000),SDG NVARCHAR(500),Class NVARCHAR(50),RenNon NVARCHAR(5000),FValue DECIMAL(34),FValue1 DECIMAL(34))`)
-    // await cds.run(`CREATE LOCAL TEMPORARY TABLE ${ltt} (StudentId NVARCHAR(5000), FIRSTNAME NVARCHAR(5000) , LASTNAME NVARCHAR(5000) , DOB NVARCHAR(5000) , ADDRESS NVARCHAR(5000))`);
-    // await cds.run(`INSERT INTO ${ltt} VALUES (?, ?, ?, ?, ?)`,  data.map(item => [
-    //   item.StudentId,
-    //   item.FirstName,
-    //   item.LastName,
-    //   item.DOB,
-    //   item.Address
-    // ]));
-    // await cds.run(`CREATE LOCAL TEMPORARY TABLE ${ltt} "STUDENTS_HDI_STUDENTS_DB_DEPLOYER_2"."Global_Table_Types"`)
-//     const ltt = 'YourLocalTemporaryTable';
-// const my_tableType = 'STUDENTS_HDI_STUDENTS_DB_DEPLOYER_2.Environment_Table_Types';
-
-// // Define the SQL statement to create the local temporary table
-// const createTableSQL = `CREATE LOCAL TEMPORARY TABLE ${ltt} LIKE ${my_tableType}`;
-
-// // Run the SQL statement using cds.run
-// await cds.run(createTableSQL);
-// await cds.run(`CREATE LOCAL TEMPORARY TABLE ${ltt} (Industry NVARCHAR(100),Year NVARCHAR(25),MONTH NVARCHAR(14),Location NVARCHAR(120),TYPE NVARCHAR(50),SubType NVARCHAR(50),KPI NVARCHAR(5000),Sno INTEGER,url NVARCHAR(5000),Value DECIMAL(34),Unit NVARCHAR(20),IUnit NVARCHAR(8),IValue DECIMAL(34),Cost DECIMAL(34),Currency NVARCHAR(10),Quality NVARCHAR(40),COMMENT NVARCHAR(5000),FiscalType NVARCHAR(1),YearA NVARCHAR(9),StartDate NVARCHAR(25),EndDate NVARCHAR(25),fiscal NVARCHAR(25),isValidationRequired NVARCHAR(1),Owner NVARCHAR(5000),Approver NVARCHAR(5000),Division NVARCHAR(5000),Value2 DECIMAL(34),Unit2 NVARCHAR(4),Distance DECIMAL(34),Weight DECIMAL(34),Scope NVARCHAR(5000),Associates INTEGER,Date DATE,Logic NVARCHAR(15),Measure NVARCHAR(70),Standard1 NVARCHAR(5000),LogicE NVARCHAR(20),GRIStd NVARCHAR(5000),SDG NVARCHAR(500),Class NVARCHAR(50),RenNon NVARCHAR(5000),FValue DECIMAL(34),FValue1 DECIMAL(34))`)
-//     await cds.run(`INSERT INTO ${ltt} VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, data.map(item => [
-//       item.Industry,
-//       item.Year,
-//       item.Month,
-//       item.Location,
-//       item.Type,
-//       item.SubType,
-//       item.KPI,
-//       item.Sno,
-//       item.url,
-//       item.Value,
-//       item.Unit,
-//       item.IUnit,
-//       item.IValue,
-//       item.Cost,
-//       item.Currency,
-//       item.Quality,
-//       item.Comment,
-//       item.FiscalType,
-//       item.YearA,
-//       item.StartDate,
-//       item.EndDate,
-//       item.fiscal,
-//       item.isValidationRequired,
-//       item.Owner,
-//       item.Approver,
-//       item.Division,
-//       item.Value2,
-//       item.Unit2,
-//       item.Distance,
-//       item.Weight,
-//       item.Scope,
-//       item.Associates,
-//       item.Date,
-//       item.Logic,
-//       item.Measure,
-//       item.Standard1,
-//       item.LogicE,
-//       item.GRIStd,
-//       item.SDG,
-//       item.Class,
-//       item.RenNon,
-//       item.FValue,
-//       item.FValue1
+    await cds.run(`CREATE LOCAL TEMPORARY TABLE ${ltt} LIKE TTCORPORATE`)
+    // await cds.run(`CREATE LOCAL TEMPORARY TABLE ${ltt} (Location NVARCHAR(120), Division NVARCHAR(5000),Industry NVARCHAR(100), Year NVARCHAR(25), Month NVARCHAR(14), Type NVARCHAR(50), SubType NVARCHAR(50), KPI NVARCHAR(5000), Unit NVARCHAR(20), Value DECIMAL(34), Cost DECIMAL(34), Currency NVARCHAR(10), Quality NVARCHAR(40), Comment NVARCHAR(5000))`)
+    await cds.run(`INSERT INTO ${ltt} VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, data.map(item => [
+      item.Location,
+      item.Division,
+      item.Industry,
+      item.Year,
+      item.Month,
 
 
+      item.Type,
+      item.SubType,
 
-//     ]));
-// await cds.run(`
-//   INSERT INTO ${ltt} VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-// `, data.map(item => [
-//   item.Industry,
-//   item.Year,
-//   item.Month,
-//   item.Location,
-//   item.Type,
-//   item.SubType,
-//   item.KPI,
-//   item.Sno,
-//   item.url,
-//   item.Value,
-//   item.Unit,
-//   item.IUnit,
-//   item.IValue,
-//   item.Cost,
-//   item.Currency,
-//   item.Quality,
-//   item.Comment,
-//   item.FiscalType,
-//   item.YearA,
-//   item.StartDate,
-//   item.EndDate,
-//   item.fiscal,
-//   item.isValidationRequired,
-//   item.Owner,
-//   item.Approver,
-//   item.Division,
-//   item.Value2,
-//   item.Unit2,
-//   item.Distance,
-//   item.Weight,
-//   item.Scope,
-//   item.Associates,
-//   item.Date,
-//   item.Logic,
-//   item.Measure,
-//   item.Standard1,
-//   item.LogicE,
-//   item.GRIStd,
-//   item.SDG,
-//   item.Class,
-//   item.RenNon,
-//   item.FValue,
-//   item.FValue1
-// ]));
-
-// const sam = [];
-const sam = JSON.stringify(data);
-const sam1 = JSON.parse(JSON.stringify(data));
+      item.KPI,
+      item.Unit,
+      item.Value,
 
 
-    // const query = `CALL INSERTDATAANDLOGERRORS(DATATOINSERT => ${ltt}, ERRORLOG => ?)`
-    const query3 = `CALL INSERTDATAANDLOGERRORS(DATATOINSERT => '${sam}', ERRORLOG => ?)`
-    // const query2 = `CALL INSERTDATAANDLOGERRORS(DATATOINSERT => ${data}, ERRORLOG => ?)`
-    // const query = `CALL "STUDENTS_HDI_STUDENTS_DB_DEPLOYER_2"."INSERTDATAANDLOGERRORS"(DATATOINSERT => '[{"STUDENTID":"02","FIRSTNAME":"jack","LASTNAME":"diary","DOB":"30.11.2008","ADDRESS":"mumbai"},{"STUDENTID":"03","FIRSTNAME":"dan","LASTNAME":"martin","DOB":"30.12.2009","ADDRESS":"delhi"}]',ERRORLOG => ?)`
-    data = await cds.run(query3); // Change BESTSELLER to errorlog
-    // data = await cds.run(query); // Change BESTSELLER to errorlog
+      item.Cost,
 
-    console.log(data);
-    // await cds.run(`DROP TABLE ${ltt}`)
-    //End of new code for hdb procedure*************************
+      item.Currency,
+      item.Quality,
+      item.Comment
+    ]));
 
-    // const insertQuery = INSERT.into(entity).entries(data); 
-    // // This calls the service handler of respective entity. It can be used if any custom 
-    // // validations need to be performed. or else custom handlers can be skipped. 
+    // await cds.run(`CREATE LOCAL TEMPORARY TABLE ${ltt} (Industry NVARCHAR(100), Year NVARCHAR(25), MONTH NVARCHAR(14), Location NVARCHAR(120), TYPE NVARCHAR(50), SubType NVARCHAR(50), KPI NVARCHAR(5000), Sno INTEGER, url NVARCHAR(5000), Value DECIMAL(34), Unit NVARCHAR(20), IUnit NVARCHAR(8), IValue DECIMAL(34), Cost DECIMAL(34), Currency NVARCHAR(10), Quality NVARCHAR(40), COMMENT NVARCHAR(5000), FiscalType NVARCHAR(1), YearA NVARCHAR(9), StartDate NVARCHAR(25), EndDate NVARCHAR(25), fiscal NVARCHAR(25), isValidationRequired NVARCHAR(1), Owner NVARCHAR(5000), Approver NVARCHAR(5000), Division NVARCHAR(5000), Value2 DECIMAL(34), Unit2 NVARCHAR(4), Distance DECIMAL(34), Weight DECIMAL(34), Scope NVARCHAR(5000), Associates INTEGER,Date DATE, Logic NVARCHAR(15), Measure NVARCHAR(70), Standard1 NVARCHAR(5000), LogicE NVARCHAR(20), GRIStd NVARCHAR(5000),SDG NVARCHAR(500),Class NVARCHAR(50), RenNon NVARCHAR(5000), FValue DECIMAL(34), FValue1 DECIMAL(34))`)
 
-    // let srv = await cds.connect.to('CatalogService');
-    // // const { Students } = srv.entities;
-    // const insertResult = await srv.run(insertQuery);
-    // // await cds.transaction.run(INSERT.into(Students).entries(data))    ;
+
+    // await cds.run(`INSERT INTO ${ltt} VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, data.map(item => [  
+    //     item.Industry,
+    //       item.Year,
+    //       item.Month,
+
+    //       item.Location,
+    //       item.Type,
+    //       item.SubType,
+
+    //       item.KPI,
+    //       item.Sno,
+    //       item.url,
+    //       item.Value,
+
+    //       item.Unit,
+
+    //       item.IUnit,
+    //       item.IValue,
+    //       item.Cost,
+
+    //       item.Currency,
+    //       item.Quality,
+    //       item.Comment,
+
+    //       item.FiscalType,
+    //       item.YearA,
+    //       item.StartDate,
+
+    //       item.EndDate,
+    //       item.fiscal,
+    //       item.isValidationRequired,
+
+    //       item.Owner,
+    //       item.Approver,
+    //       item.Division,
+
+    //       item.Value2,
+    //       item.Unit2,
+    //       item.Distance,
+
+    //       item.Weight,
+    //       item.Scope,
+    //       item.Associates,
+
+    //       item.Date,
+    //       item.Logic,
+    //       item.Measure,
+    //       item.Standard1,
+    //       item.LogicE,
+
+    //       item.GRIStd,
+    //       item.SDG,
+    //       item.Class,
+
+    //       item.RenNon,
+    //       item.FValue,
+    //       item.FValue1
+
+
+
+    //     ]));
+
+    const query = `CALL INSERTDATAANDLOGERRORS(DATATOINSERT => ${ltt}, ERRORLOG => ?)`
+
+    data = await cds.run(query); // Change BESTSELLER to errorlog
+
+    await cds.run(`DROP TABLE ${ltt}`)
+      //End of new code for hdb procedure*************************
+      ;
     const insertResult = [];
     let query1 = SELECT.from(entity);
     await srv.run(query1);
@@ -272,6 +234,25 @@ const sam1 = JSON.parse(JSON.stringify(data));
     });
 
     // return result;
+  }
+
+  function validate(str) {
+    var dat = str;
+    dat.Location.replace(/^\s+|\s+$/g, '');
+    dat.Division.replace(/^\s+|\s+$/g, '');
+    dat.Month.replace(/^\s+|\s+$/g, '');
+    dat.Type.replace(/^\s+|\s+$/g, '');
+    dat.SubType.replace(/^\s+|\s+$/g, '');
+    dat.KPI.replace(/^\s+|\s+$/g, '');
+
+    if (dat.Value == null || dat.Value == '') {
+      dat.Value = 0;
+    }
+
+    if (dat.Cost == null || dat.Value == '') {
+      dat.Value = 0;
+    }
+    return dat;
   }
 
 }

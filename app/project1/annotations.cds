@@ -1,31 +1,66 @@
 using CatalogService as service from '../../srv/interactions_srv';
 
-annotate service.Students with @(
+annotate service.ERROR_LOG1 with @(
     UI.LineItem : [
         {
             $Type : 'UI.DataField',
-            Label : 'StudentId',
-            Value : StudentId,
+            Label : 'Location',
+            Value : Location,
         },
         {
             $Type : 'UI.DataField',
-            Label : 'FirstName',
-            Value : FirstName,
+            Label : 'Division',
+            Value : Division,
         },
         {
             $Type : 'UI.DataField',
-            Label : 'LastName',
-            Value : LastName,
+            Label : 'Year',
+            Value : Year,
         },
         {
             $Type : 'UI.DataField',
-            Label : 'DOB',
-            Value : DOB,
+            Label : 'Month',
+            Value : Month,
         },
         {
             $Type : 'UI.DataField',
-            Label : 'Address',
-            Value : Address,
+            Label : 'Type',
+            Value : Type,
+        },
+         {
+            $Type : 'UI.DataField',
+            Label : 'SubType',
+            Value : SubType,
+        },
+         {
+            $Type : 'UI.DataField',
+            Label : 'Unit',
+            Value : Unit,
+        },
+         {
+            $Type : 'UI.DataField',
+            Label : 'Value',
+            Value : Value,
+        },
+         {
+            $Type : 'UI.DataField',
+            Label : 'Cost',
+            Value : Cost,
+        },
+         {
+            $Type : 'UI.DataField',
+            Label : 'Currency',
+            Value : Currency,
+        },
+         {
+            $Type : 'UI.DataField',
+            Label : 'Quality',
+            Value : Quality,
+        },
+         {
+            $Type : 'UI.DataField',
+            Label : 'Comment',
+            Value : Comment,
         },
     ]
 );

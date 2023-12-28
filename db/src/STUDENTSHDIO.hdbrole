@@ -1,0 +1,13 @@
+{
+    "role": 
+    {
+    "name": "STUDENTSHDIO#",
+       "object_privileges": [
+                             {
+                                  "name": "APP_INTERACTIONS_HAZ_TRAN_3E",
+                                  "type":"TABLE", 
+                                  "privileges_with_grant_option": ["SELECT"]
+                             }
+                            ]
+               }
+}

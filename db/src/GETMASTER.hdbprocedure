@@ -1,0 +1,32 @@
+ procedure GetMasterData(in Industry NVARCHAR(100),
+ out OUTPUT_TABLE "TTKPI",
+ out OUTPUT_YEAR "TTYEAR")
+--  Language SQLScript
+-- reads sql data
+-- with result view procedure_view_GetMasterData
+as
+begin
+    OUTPUT_TABLE = SELECT  Industry,
+    TYPE,
+    SubType,
+    KPI,
+    MEASURE,
+    EMISSIONLOGIC,
+    SCOPE,
+    ENERGYLOGIC,
+    GRISTD,
+    SDG,
+    RENNON
+    
+     FROM "APP_INTERACTIONS_KPILIST"
+     WHERE Industry =:Industry;
+
+     OUTPUT_YEAR = select Industry,
+     YearA,
+     YearL,
+     STARTDATE,
+    ENDDATE
+    FROM "APP_INTERACTIONS_YEAR_MODULE"
+    WHERE Industry =:Industry;
+    
+end;

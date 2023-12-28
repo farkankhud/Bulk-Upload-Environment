@@ -1,0 +1,11 @@
+{
+     "role": 
+     {
+     "name": "STUDENTSHDIA",
+     "schema_privileges": [
+         {
+             "privileges": ["SELECT", "SELECT METADATA"]
+         }
+                           ]
+     }
+ }
