@@ -23,21 +23,36 @@ module.exports = srv => {
           var workbook = XLSX.read(buffer, { type: "buffer", cellText: true, cellDates: true, dateNF: 'dd"."mm"."yyyy', cellNF: true, rawNumbers: false });
           // var workbook = XLSX.read(buffer, { type: "buffer" });
           let data = []
-          const sheets = workbook.SheetNames
-          for (let i = 0; i < sheets.length; i++) {
+          let errorNodeArray = []
+          const sheetName =   'Environment'; 
+        //   workbook.SheetNames = workbook.SheetNames.filter(function(item) {
+        //     return item !== 'LookUp'
+        // })
+        
+          // const sheets = workbook.SheetNames
+          const sheets = workbook.Sheets[sheetName];
+          let jsonData = XLSX.utils.sheet_to_json(sheets);
+          let propertyToDelete = '__EMPTY';
+          jsonData = jsonData.filter(obj => !obj.hasOwnProperty(propertyToDelete)); 
+          // {
+          //       return __EMPTY !== 'LookUp'
+          //   })
+          // for (let i = 0; i < sheets.length; i++) {
             // i = i - 1;
-            const temp = XLSX.utils.sheet_to_json(
-              workbook.Sheets[workbook.SheetNames[i]], { cellText: true, cellDates: true, dateNF: 'dd"."mm"."yyyy', rawNumbers: false, header: 0, defval: "", blankrows: false })
+            // const temp = XLSX.utils.sheet_to_json(
+            let temp = XLSX.utils.sheet_to_json(
+              // workbook.Sheets[workbook.SheetNames[0]], { cellText: true, cellDates: true, dateNF: 'dd"."mm"."yyyy', rawNumbers: false, header: 0, defval: "", blankrows: false })
+              sheets, { cellText: true, cellDates: true, dateNF: 'dd"."mm"."yyyy', rawNumbers: false })
               // workbook.Sheets[workbook.SheetNames[i]], { cellText: true, cellDates: true, dateNF: 'dd"."mm"."yyyy', rawNumbers: false })
-            temp.forEach((res, index) => {
+              temp = temp.filter(obj => !obj.hasOwnProperty(propertyToDelete));
+              temp.forEach((res, index) => {
               if (index === 0) return;
-              // const res1 = validate(res);
              
-
+              const res1 = validate(res);
               
-              data.push(JSON.parse(JSON.stringify(res)))
+              data.push(JSON.parse(JSON.stringify(res1)))
             })
-          }
+          // }
           if (data) {
             // console.log("data =", data);
             const responseCall = await CallEntity(entity, data);
@@ -239,7 +254,7 @@ module.exports = srv => {
   function validate(str) {
     var dat = str;
     dat.Location.replace(/^\s+|\s+$/g, '');
-    dat.Division.replace(/^\s+|\s+$/g, '');
+    // dat.Division.replace(/^\s+|\s+$/g, '');
     dat.Month.replace(/^\s+|\s+$/g, '');
     dat.Type.replace(/^\s+|\s+$/g, '');
     dat.SubType.replace(/^\s+|\s+$/g, '');

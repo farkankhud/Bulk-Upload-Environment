@@ -22,6 +22,7 @@ begin
      WHERE Industry =:Industry;
 
      OUTPUT_YEAR = select Industry,
+     fiscal,
      YearA,
      YearL,
      STARTDATE,

@@ -270,11 +270,16 @@ select TOP 1 type,
              SubType = :c_data_row.SubType and
              KPI = :c_data_row.KPI;
 
+SELECT yearl, startdate, enddate
+       into Year, StartDate, EndDate
+       from :TEMpYEAR
+       where fiscal = :c_data_row.Year;
+
 -- FiscalType = :c_data_row.FiscalType;
 -- YearA = :c_data_row.YearA;
 -- StartDate = :c_data_row.StartDate;
 -- EndDate = :c_data_row.EndDate;
--- fiscal = :c_data_row.fiscal;
+fiscal = :c_data_row.Year;
 -- isValidationRequired = :c_data_row.isValidationRequired;
 -- Owner = :c_data_row.Owner;
 -- Approver = :c_data_row.Approver;
@@ -306,7 +311,7 @@ Division = :c_data_row.Division;
 --            VALUES (Industry, Year, Month, Location, Type, SubType, KPI, Sno, url, Value, Unit, IUnit, IValue, Cost, Currency, Quality, Comment, FiscalType, YearA, StartDate, EndDate, fiscal, isValidationRequired, Owner, Approver, Division, Value2, Unit2, Distance, Weight, Scope, Associates, Date, Logic, Measure, Standard1, LogicE, GRIStd, SDG, Class, RenNon, FValue, FValue1);
 IF LV_TYPE IS NOT NULL AND LV_SUBTYPE IS NOT NULL AND LV_KPI IS NOT NULL THEN
 INSERT INTO APP_INTERACTIONS_ENVIRONMENT_REPORT (Industry, Year, Month, Location, Type, SubType, KPI, Sno, url, Value, Unit, IUnit, IValue, Cost, Currency, Quality, Comment, FiscalType, YearA, StartDate, EndDate, fiscal, isValidationRequired, Owner, Approver, Division, Value2, Unit2, Distance, Weight, Scope, Associates, Date, Logic, Measure, Standard1, LogicE, GRIStd, SDG, Class, RenNon, FValue, FValue1)
-           VALUES (Industry, Year, Month, Location, Type, SubType, KPI, Sno, '', Value, Unit, '', 0, Cost, Currency, Quality, Comment, '', '', '', '', '', '', '', '', Division, 0, '', 0, 0, Scope, 0, '', Logic, Measure, Standard1, LogicE, GRIStd, SDG, '', RenNon, 0, 0);
+           VALUES (Industry, Year, Month, Location, Type, SubType, KPI, Sno, '', Value, Unit, '', 0, Cost, Currency, Quality, Comment, '', '', StartDate, EndDate, '', '', '', '', Division, 0, '', 0, 0, Scope, 0, '', Logic, Measure, Standard1, LogicE, GRIStd, SDG, '', RenNon, 0, 0);
 END IF;
 -- INSERT INTO APP_INTERACTIONS_ENVIRONMENT_REPORT (Industry, Year, Month, Location, Type, SubType, KPI, Sno)
 -- VALUES (Industry, Year, Month, Location, Type, SubType, KPI, Sno);

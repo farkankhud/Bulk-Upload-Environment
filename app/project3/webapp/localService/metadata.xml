@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+        <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+        <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+        <edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+    </edmx:Reference>
+    <edmx:DataServices>
+        <Schema Namespace="CatalogService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <EntityContainer Name="EntityContainer">
+                <Singleton Name="ExcelUpload" Type="CatalogService.ExcelUpload"/>
+                <EntitySet Name="Students" EntityType="CatalogService.Students"/>
+                <EntitySet Name="Environment_Report" EntityType="CatalogService.Environment_Report"/>
+                <EntitySet Name="EmissionFactors" EntityType="CatalogService.EmissionFactors"/>
+                <EntitySet Name="KPIList" EntityType="CatalogService.KPIList"/>
+                <EntitySet Name="UoMConversions" EntityType="CatalogService.UoMConversions"/>
+                <EntitySet Name="Year_Module" EntityType="CatalogService.Year_Module"/>
+                <EntitySet Name="EnergyCnversions" EntityType="CatalogService.EnergyCnversions"/>
+                <EntitySet Name="ERROR_LOG1" EntityType="CatalogService.ERROR_LOG1"/>
+            </EntityContainer>
+            <EntityType Name="ExcelUpload">
+                <Property Name="excel" Type="Edm.Stream"/>
+            </EntityType>
+            <EntityType Name="Students">
+                <Key>
+                    <PropertyRef Name="StudentId"/>
+                </Key>
+                <Property Name="StudentId" Type="Edm.String" Nullable="false"/>
+                <Property Name="FirstName" Type="Edm.String"/>
+                <Property Name="LastName" Type="Edm.String"/>
+                <Property Name="DOB" Type="Edm.String"/>
+                <Property Name="Address" Type="Edm.String"/>
+            </EntityType>
+            <EntityType Name="Environment_Report">
+                <Key>
+                    <PropertyRef Name="Industry"/>
+                    <PropertyRef Name="Year"/>
+                    <PropertyRef Name="Month"/>
+                    <PropertyRef Name="Location"/>
+                    <PropertyRef Name="Type"/>
+                    <PropertyRef Name="SubType"/>
+                    <PropertyRef Name="KPI"/>
+                    <PropertyRef Name="Sno"/>
+                </Key>
+                <Property Name="Industry" Type="Edm.String" MaxLength="100" Nullable="false"/>
+                <Property Name="Year" Type="Edm.String" MaxLength="25" Nullable="false"/>
+                <Property Name="Month" Type="Edm.String" MaxLength="14" Nullable="false"/>
+                <Property Name="Location" Type="Edm.String" MaxLength="120" Nullable="false"/>
+                <Property Name="Type" Type="Edm.String" MaxLength="50" Nullable="false"/>
+                <Property Name="SubType" Type="Edm.String" MaxLength="50" Nullable="false"/>
+                <Property Name="KPI" Type="Edm.String" Nullable="false"/>
+                <Property Name="Sno" Type="Edm.Int32" Nullable="false"/>
+                <Property Name="url" Type="Edm.String"/>
+                <Property Name="Value" Type="Edm.Decimal" Scale="variable"/>
+                <Property Name="Unit" Type="Edm.String" MaxLength="20"/>
+                <Property Name="IUnit" Type="Edm.String" MaxLength="8"/>
+                <Property Name="IValue" Type="Edm.Decimal" Scale="variable"/>
+                <Property Name="Cost" Type="Edm.Decimal" Scale="variable"/>
+                <Property Name="Currency" Type="Edm.String" MaxLength="10"/>
+                <Property Name="Quality" Type="Edm.String" MaxLength="40"/>
+                <Property Name="Comment" Type="Edm.String"/>
+                <Property Name="FiscalType" Type="Edm.String" MaxLength="1"/>
+                <Property Name="YearA" Type="Edm.String" MaxLength="9"/>
+                <Property Name="StartDate" Type="Edm.String" MaxLength="25"/>
+                <Property Name="EndDate" Type="Edm.String" MaxLength="25"/>
+                <Property Name="fiscal" Type="Edm.String" MaxLength="25"/>
+                <Property Name="isValidationRequired" Type="Edm.String" MaxLength="1"/>
+                <Property Name="Owner" Type="Edm.String"/>
+                <Property Name="Approver" Type="Edm.String"/>
+                <Property Name="Division" Type="Edm.String"/>
+                <Property Name="Value2" Type="Edm.Decimal" Scale="variable"/>
+                <Property Name="Unit2" Type="Edm.String" MaxLength="4"/>
+                <Property Name="Distance" Type="Edm.Decimal" Scale="variable"/>
+                <Property Name="Weight" Type="Edm.Decimal" Scale="variable"/>
+                <Property Name="Scope" Type="Edm.String"/>
+                <Property Name="Associates" Type="Edm.Int32"/>
+                <Property Name="Date" Type="Edm.String" MaxLength="25"/>
+                <Property Name="Logic" Type="Edm.String" MaxLength="15"/>
+                <Property Name="Measure" Type="Edm.String" MaxLength="70"/>
+                <Property Name="Standard1" Type="Edm.String"/>
+                <Property Name="LogicE" Type="Edm.String" MaxLength="20"/>
+                <Property Name="GRIStd" Type="Edm.String"/>
+                <Property Name="SDG" Type="Edm.String" MaxLength="500"/>
+                <Property Name="Class" Type="Edm.String" MaxLength="50"/>
+                <Property Name="RenNon" Type="Edm.String"/>
+                <Property Name="FValue" Type="Edm.Decimal" Scale="variable"/>
+                <Property Name="FValue1" Type="Edm.Decimal" Scale="variable"/>
+            </EntityType>
+            <EntityType Name="EmissionFactors">
+                <Key>
+                    <PropertyRef Name="Industry"/>
+                    <PropertyRef Name="KPI"/>
+                    <PropertyRef Name="Type"/>
+                    <PropertyRef Name="SubType"/>
+                    <PropertyRef Name="Standard"/>
+                    <PropertyRef Name="Shortlong"/>
+                    <PropertyRef Name="class"/>
+                </Key>
+                <Property Name="Industry" Type="Edm.String" MaxLength="100" Nullable="false"/>
+                <Property Name="KPI" Type="Edm.String" Nullable="false"/>
+                <Property Name="Type" Type="Edm.String" Nullable="false"/>
+                <Property Name="SubType" Type="Edm.String" Nullable="false"/>
+                <Property Name="Standard" Type="Edm.String" Nullable="false"/>
+                <Property Name="Shortlong" Type="Edm.String" Nullable="false"/>
+                <Property Name="class" Type="Edm.String" Nullable="false"/>
+                <Property Name="EmissionFactor" Type="Edm.Decimal" Scale="variable"/>
+                <Property Name="UoM" Type="Edm.String"/>
+                <Property Name="Deno" Type="Edm.String"/>
+                <Property Name="Nume" Type="Edm.String"/>
+            </EntityType>
+            <EntityType Name="KPIList">
+                <Key>
+                    <PropertyRef Name="Industry"/>
+                    <PropertyRef Name="KPI"/>
+                    <PropertyRef Name="Type"/>
+                    <PropertyRef Name="SubType"/>
+                    <PropertyRef Name="EnergyUse"/>
+                </Key>
+                <Property Name="Industry" Type="Edm.String" MaxLength="100" Nullable="false"/>
+                <Property Name="KPI" Type="Edm.String" MaxLength="100" Nullable="false"/>
+                <Property Name="Type" Type="Edm.String" MaxLength="100" Nullable="false"/>
+                <Property Name="SubType" Type="Edm.String" MaxLength="100" Nullable="false"/>
+                <Property Name="EnergyUse" Type="Edm.String" MaxLength="100" Nullable="false"/>
+                <Property Name="kpiconc" Type="Edm.String" MaxLength="100"/>
+                <Property Name="Supplier" Type="Edm.String" MaxLength="100"/>
+                <Property Name="BiogenicEmissions" Type="Edm.String" MaxLength="4"/>
+                <Property Name="Template" Type="Edm.String"/>
+                <Property Name="Measure" Type="Edm.String" MaxLength="50"/>
+                <Property Name="EFStandard" Type="Edm.String"/>
+                <Property Name="EmissionLogic" Type="Edm.String" MaxLength="50"/>
+                <Property Name="Scope" Type="Edm.String"/>
+                <Property Name="ReportingStandard" Type="Edm.String"/>
+                <Property Name="EnergyLogic" Type="Edm.String" MaxLength="20"/>
+                <Property Name="GRIStd" Type="Edm.String"/>
+                <Property Name="SDG" Type="Edm.String"/>
+                <Property Name="RenNon" Type="Edm.String"/>
+            </EntityType>
+            <EntityType Name="UoMConversions">
+                <Key>
+                    <PropertyRef Name="Measure"/>
+                    <PropertyRef Name="UserInputUnit"/>
+                    <PropertyRef Name="ExpectedOutputUnit"/>
+                </Key>
+                <Property Name="Measure" Type="Edm.String" Nullable="false"/>
+                <Property Name="UserInputUnit" Type="Edm.String" Nullable="false"/>
+                <Property Name="ExpectedOutputUnit" Type="Edm.String" Nullable="false"/>
+                <Property Name="ConverstionFactor" Type="Edm.Decimal" Nullable="false" Scale="variable"/>
+                <Property Name="Operation" Type="Edm.String" Nullable="false"/>
+                <Property Name="KPI" Type="Edm.String" MaxLength="100"/>
+                <Property Name="Type" Type="Edm.String" MaxLength="100"/>
+                <Property Name="Subtype" Type="Edm.String" MaxLength="100"/>
+            </EntityType>
+            <EntityType Name="Year_Module">
+                <Key>
+                    <PropertyRef Name="Industry"/>
+                    <PropertyRef Name="YearL"/>
+                    <PropertyRef Name="fiscal"/>
+                </Key>
+                <Property Name="Industry" Type="Edm.String" MaxLength="100" Nullable="false"/>
+                <Property Name="YearL" Type="Edm.String" MaxLength="4" Nullable="false"/>
+                <Property Name="fiscal" Type="Edm.String" MaxLength="25" Nullable="false"/>
+                <Property Name="YearR" Type="Edm.String" MaxLength="4"/>
+                <Property Name="YearA" Type="Edm.String" MaxLength="9"/>
+                <Property Name="StartDate" Type="Edm.String" MaxLength="25"/>
+                <Property Name="EndDate" Type="Edm.String" MaxLength="25"/>
+            </EntityType>
+            <EntityType Name="EnergyCnversions">
+                <Key>
+                    <PropertyRef Name="Industry"/>
+                    <PropertyRef Name="KPI"/>
+                    <PropertyRef Name="Type"/>
+                    <PropertyRef Name="Subtype"/>
+                    <PropertyRef Name="UserInputUnit"/>
+                </Key>
+                <Property Name="Industry" Type="Edm.String" MaxLength="100" Nullable="false"/>
+                <Property Name="KPI" Type="Edm.String" MaxLength="100" Nullable="false"/>
+                <Property Name="Type" Type="Edm.String" MaxLength="100" Nullable="false"/>
+                <Property Name="Subtype" Type="Edm.String" MaxLength="100" Nullable="false"/>
+                <Property Name="UserInputUnit" Type="Edm.String" Nullable="false"/>
+                <Property Name="ExpectedOutputUnit" Type="Edm.String" Nullable="false"/>
+                <Property Name="ConverstionFactor" Type="Edm.Decimal" Nullable="false" Scale="variable"/>
+                <Property Name="Operation" Type="Edm.String" Nullable="false"/>
+            </EntityType>
+            <EntityType Name="ERROR_LOG1">
+                <Property Name="Location" Type="Edm.String" MaxLength="120"/>
+                <Property Name="Division" Type="Edm.String"/>
+                <Property Name="Year" Type="Edm.String" MaxLength="25"/>
+                <Property Name="Month" Type="Edm.String" MaxLength="14"/>
+                <Property Name="Type" Type="Edm.String" MaxLength="50"/>
+                <Property Name="SubType" Type="Edm.String" MaxLength="50"/>
+                <Property Name="KPI" Type="Edm.String"/>
+                <Property Name="Unit" Type="Edm.String" MaxLength="20"/>
+                <Property Name="Value" Type="Edm.Decimal" Scale="variable"/>
+                <Property Name="Cost" Type="Edm.Decimal" Scale="variable"/>
+                <Property Name="Currency" Type="Edm.String" MaxLength="10"/>
+                <Property Name="Quality" Type="Edm.String" MaxLength="40"/>
+                <Property Name="Comment" Type="Edm.String"/>
+                <Property Name="ERROR_MSG" Type="Edm.String"/>
+            </EntityType>
+            <Annotations Target="CatalogService.ExcelUpload/excel">
+                <Annotation Term="Core.MediaType" String="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
+            </Annotations>
+            <Annotations Target="CatalogService.Students">
+                <Annotation Term="UI.FieldGroup" Qualifier="GeneratedGroup1">
+                    <Record Type="UI.FieldGroupType">
+                        <PropertyValue Property="Data">
+                            <Collection>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Label" String="StudentId"/>
+                                    <PropertyValue Property="Value" Path="StudentId"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Label" String="FirstName"/>
+                                    <PropertyValue Property="Value" Path="FirstName"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Label" String="LastName"/>
+                                    <PropertyValue Property="Value" Path="LastName"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Label" String="DOB"/>
+                                    <PropertyValue Property="Value" Path="DOB"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Label" String="Address"/>
+                                    <PropertyValue Property="Value" Path="Address"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.Facets">
+                    <Collection>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="ID" String="GeneratedFacet1"/>
+                            <PropertyValue Property="Label" String="General Information"/>
+                            <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#GeneratedGroup1"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="CatalogService.ERROR_LOG1">
+                <Annotation Term="UI.LineItem">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Label" String="Location"/>
+                            <PropertyValue Property="Value" Path="Location"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Label" String="Division"/>
+                            <PropertyValue Property="Value" Path="Division"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Label" String="Year"/>
+                            <PropertyValue Property="Value" Path="Year"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Label" String="Month"/>
+                            <PropertyValue Property="Value" Path="Month"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Label" String="Type"/>
+                            <PropertyValue Property="Value" Path="Type"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Label" String="SubType"/>
+                            <PropertyValue Property="Value" Path="SubType"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Label" String="Unit"/>
+                            <PropertyValue Property="Value" Path="Unit"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Label" String="Value"/>
+                            <PropertyValue Property="Value" Path="Value"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Label" String="Cost"/>
+                            <PropertyValue Property="Value" Path="Cost"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Label" String="Currency"/>
+                            <PropertyValue Property="Value" Path="Currency"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Label" String="Quality"/>
+                            <PropertyValue Property="Value" Path="Quality"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Label" String="Comment"/>
+                            <PropertyValue Property="Value" Path="Comment"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>
